@@ -41,12 +41,12 @@ export default function DashboardPage() {
       
       <div className="flex flex-1">
 
-       <aside className="sticky top-14 h-screen overflow-hidden">
+       <aside className="sticky top-14 h-screen z-100">
           <Sidebar onAddWidget={handleAddWidget} />
         </aside>
         <main
           className={cn(
-            'flex-1 overflow-y-auto" transition-all duration-300',
+            'flex-1 overflow-y-auto relative z-0 transition-all duration-300',
             sidebarOpen ? 'lg:ml-0' : ''
           )}
         >

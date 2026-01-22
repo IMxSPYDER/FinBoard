@@ -92,7 +92,8 @@ export function DashboardGrid({ onEditWidget }: DashboardGridProps) {
           <h3 className="text-xl font-semibold">No widgets yet</h3>
           <p className="max-w-md text-muted-foreground">
             Add widgets from the sidebar to start building your personalized finance dashboard.
-            Choose from stock tables, finance cards, and charts.
+            Choose from stock tables, finance cards, and charts.<br/><br/>
+            Add API keys in settings for real-time data.
           </p>
         </div>
       </div>

@@ -48,17 +48,21 @@ export function Sidebar({ onAddWidget }: SidebarProps) {
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
+          className="sticky inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
       
       <aside
-  className={cn(
-    'sticky left-0 top-14 z-40 flex h-[calc(100vh-3.5rem)] w-72 flex-col border-r border-border bg-sidebar transition-transform duration-300 lg:static lg:translate-x-0',
-    sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-  )}
->
+        className={cn(
+          // Mobile: fixed overlay
+          'fixed top-14 left-0 z-50 h-[calc(100vh-3.5rem)] w-[85vw] max-w-[320px] bg-sidebar border-r border-border transition-transform duration-300 ease-in-out',
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+          // Desktop: sticky sidebar
+          'lg:static lg:translate-x-0 lg:w-72 lg:h-[calc(100vh-3.5rem)] lg:top-14'
+        )}
+      >
+
   {/* Header */}
   <div className="flex items-center justify-between border-b border-sidebar-border p-4 flex-shrink-0">
     <h2 className="font-semibold text-sidebar-foreground">Widget Builder</h2>
