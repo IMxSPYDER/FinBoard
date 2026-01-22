@@ -112,10 +112,9 @@ export interface DashboardState {
 
 // Dashboard Templates
 export type DashboardTemplate = 'trader' | 'investor' | 'analyst' | 'custom';
-type OmitFromUnion<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
 
 export interface TemplateConfig {
   name: string;
   description: string;
-  widgets: OmitFromUnion<Widget, 'id' | 'createdAt' | 'updatedAt'>[];
+  widgets: Omit<Widget, 'id' | 'createdAt' | 'updatedAt'>[];
 }

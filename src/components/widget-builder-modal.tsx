@@ -24,7 +24,6 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { X } from 'lucide-react';
-
 import type {
   Widget,
   WidgetType,
@@ -32,7 +31,6 @@ import type {
   TimeInterval,
   RefreshInterval,
   ApiProvider,
-  BaseWidget,
 } from '@/types';
 
 interface WidgetBuilderModalProps {
@@ -45,7 +43,7 @@ interface WidgetBuilderModalProps {
 const defaultPositions = {
   'stock-table': { x: 0, y: 0, w: 2, h: 2 },
   'finance-card': { x: 0, y: 0, w: 1, h: 1 },
-  chart: { x: 0, y: 0, w: 2, h: 2 },
+  'chart': { x: 0, y: 0, w: 2, h: 2 },
 };
 
 const columnOptions = [
@@ -66,79 +64,69 @@ export function WidgetBuilderModal({
   editWidget,
 }: WidgetBuilderModalProps) {
   const { addWidget, updateWidget } = useDashboardStore();
-
+  
   // Common fields
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [symbol, setSymbol] = useState('AAPL');
-  const [apiProvider, setApiProvider] =
-    useState<ApiProvider>('alpha-vantage');
-  const [refreshInterval, setRefreshInterval] =
-    useState<RefreshInterval>(10000);
-
+  const [apiProvider, setApiProvider] = useState<ApiProvider>('alpha-vantage');
+  const [refreshInterval, setRefreshInterval] = useState<RefreshInterval>(10000);
+  
   // Stock Table fields
-  const [symbols, setSymbols] = useState<string[]>([
-    'AAPL',
-    'TSLA',
-    'MSFT',
-  ]);
-  const [columns, setColumns] = useState<string[]>([
-    'symbol',
-    'price',
-    'change',
-    'changePercent',
-  ]);
+  const [symbols, setSymbols] = useState<string[]>(['AAPL', 'TSLA', 'MSFT']);
+  const [columns, setColumns] = useState<string[]>(['symbol', 'price', 'change', 'changePercent']);
   const [pageSize, setPageSize] = useState(5);
   const [newSymbol, setNewSymbol] = useState('');
-
+  
   // Finance Card fields
   const [showVolume, setShowVolume] = useState(true);
   const [showMarketCap, setShowMarketCap] = useState(true);
-
+  
   // Chart fields
   const [chartType, setChartType] = useState<ChartType>('line');
-  const [timeInterval, setTimeInterval] =
-    useState<TimeInterval>('daily');
-
+  const [timeInterval, setTimeInterval] = useState<TimeInterval>('daily');
+  
   const activeType = editWidget?.type || widgetType;
-
+  
+  // Reset form when modal opens/closes or widget changes
   useEffect(() => {
-    if (!open) return;
-
-    if (editWidget) {
-      setTitle(editWidget.title);
-      setDescription(editWidget.description || '');
-      setSymbol(editWidget.symbol);
-      setApiProvider(editWidget.apiProvider);
-      setRefreshInterval(editWidget.refreshInterval);
-
-      if (editWidget.type === 'stock-table') {
-        setSymbols(editWidget.symbols);
-        setColumns(editWidget.columns);
-        setPageSize(editWidget.pageSize);
-      } else if (editWidget.type === 'finance-card') {
-        setShowVolume(editWidget.showVolume);
-        setShowMarketCap(editWidget.showMarketCap);
-      } else if (editWidget.type === 'chart') {
-        setChartType(editWidget.chartType);
-        setTimeInterval(editWidget.timeInterval);
+    if (open) {
+      if (editWidget) {
+        setTitle(editWidget.title);
+        setDescription(editWidget.description || '');
+        setSymbol(editWidget.symbol);
+        setApiProvider(editWidget.apiProvider);
+        setRefreshInterval(editWidget.refreshInterval);
+        
+        if (editWidget.type === 'stock-table') {
+          setSymbols(editWidget.symbols);
+          setColumns(editWidget.columns);
+          setPageSize(editWidget.pageSize);
+        } else if (editWidget.type === 'finance-card') {
+          setShowVolume(editWidget.showVolume);
+          setShowMarketCap(editWidget.showMarketCap);
+        } else if (editWidget.type === 'chart') {
+          setChartType(editWidget.chartType);
+          setTimeInterval(editWidget.timeInterval);
+        }
+      } else {
+        // Set defaults for new widget
+        setTitle(getDefaultTitle(activeType));
+        setDescription('');
+        setSymbol('AAPL');
+        setApiProvider('alpha-vantage');
+        setRefreshInterval(10000);
+        setSymbols(['AAPL', 'TSLA', 'MSFT']);
+        setColumns(['symbol', 'price', 'change', 'changePercent']);
+        setPageSize(5);
+        setShowVolume(true);
+        setShowMarketCap(true);
+        setChartType('line');
+        setTimeInterval('daily');
       }
-    } else {
-      setTitle(getDefaultTitle(activeType));
-      setDescription('');
-      setSymbol('AAPL');
-      setApiProvider('alpha-vantage');
-      setRefreshInterval(10000);
-      setSymbols(['AAPL', 'TSLA', 'MSFT']);
-      setColumns(['symbol', 'price', 'change', 'changePercent']);
-      setPageSize(5);
-      setShowVolume(true);
-      setShowMarketCap(true);
-      setChartType('line');
-      setTimeInterval('daily');
     }
   }, [open, editWidget, activeType]);
-
+  
   function getDefaultTitle(type?: WidgetType): string {
     switch (type) {
       case 'stock-table':
@@ -151,78 +139,64 @@ export function WidgetBuilderModal({
         return 'Widget';
     }
   }
-
+  
   const handleAddSymbol = () => {
     if (newSymbol && !symbols.includes(newSymbol.toUpperCase())) {
       setSymbols([...symbols, newSymbol.toUpperCase()]);
       setNewSymbol('');
     }
   };
-
+  
   const handleRemoveSymbol = (symbolToRemove: string) => {
     setSymbols(symbols.filter((s) => s !== symbolToRemove));
   };
-
+  
   const handleToggleColumn = (column: string) => {
-    setColumns((prev) =>
-      prev.includes(column)
-        ? prev.filter((c) => c !== column)
-        : [...prev, column],
-    );
+    if (columns.includes(column)) {
+      setColumns(columns.filter((c) => c !== column));
+    } else {
+      setColumns([...columns, column]);
+    }
   };
-
+  
   const handleSubmit = () => {
     if (!activeType) return;
-
-    const now = Date.now();
-
-    const baseWidget: Omit<
-      BaseWidget,
-      'id' | 'createdAt' | 'updatedAt' | 'type'
-    > = {
+    
+    const baseWidget = {
       title,
       description: description || undefined,
       symbol,
       apiProvider,
       refreshInterval,
-      position:
-        editWidget?.position || defaultPositions[activeType],
+      position: editWidget?.position || defaultPositions[activeType],
     };
-
+    
     if (editWidget) {
-      // UPDATE WIDGET
+      // Update existing widget
       if (activeType === 'stock-table') {
         updateWidget(editWidget.id, {
           ...baseWidget,
           symbols,
           columns,
           pageSize,
-          updatedAt: now,
         });
       } else if (activeType === 'finance-card') {
         updateWidget(editWidget.id, {
           ...baseWidget,
           showVolume,
           showMarketCap,
-          updatedAt: now,
         });
       } else if (activeType === 'chart') {
         updateWidget(editWidget.id, {
           ...baseWidget,
           chartType,
           timeInterval,
-          updatedAt: now,
         });
       }
     } else {
-      // ADD WIDGET
-      const id = crypto.randomUUID();
-
+      // Add new widget
       if (activeType === 'stock-table') {
         addWidget({
-          id,
-          createdAt: now,
-          updatedAt: now,
           type: 'stock-table',
           ...baseWidget,
           symbols,
@@ -231,9 +205,6 @@ export function WidgetBuilderModal({
         });
       } else if (activeType === 'finance-card') {
         addWidget({
-          id,
-          createdAt: now,
-          updatedAt: now,
           type: 'finance-card',
           ...baseWidget,
           showVolume,
@@ -242,9 +213,6 @@ export function WidgetBuilderModal({
         });
       } else if (activeType === 'chart') {
         addWidget({
-          id,
-          createdAt: now,
-          updatedAt: now,
           type: 'chart',
           ...baseWidget,
           chartType,
@@ -252,7 +220,7 @@ export function WidgetBuilderModal({
         });
       }
     }
-
+    
     onOpenChange(false);
   };
   
