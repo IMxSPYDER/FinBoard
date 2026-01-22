@@ -113,8 +113,14 @@ export interface DashboardState {
 // Dashboard Templates
 export type DashboardTemplate = 'trader' | 'investor' | 'analyst' | 'custom';
 
+export type WidgetInput =
+  | Omit<StockTableWidget, 'id' | 'createdAt' | 'updatedAt'>
+  | Omit<FinanceCardWidget, 'id' | 'createdAt' | 'updatedAt'>
+  | Omit<ChartWidget, 'id' | 'createdAt' | 'updatedAt'>;
+
+
 export interface TemplateConfig {
   name: string;
   description: string;
-  widgets: Omit<Widget, 'id' | 'createdAt' | 'updatedAt'>[];
+  widgets: WidgetInput[];
 }
