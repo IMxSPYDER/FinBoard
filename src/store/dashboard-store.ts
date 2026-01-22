@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Widget, WidgetPosition, ApiConfig, DashboardTemplate, TemplateConfig } from '@/types';
+import type { Widget, WidgetPosition, ApiConfig, DashboardTemplate, TemplateConfig, WidgetInput } from '@/types';
 
 interface DashboardStore {
   // State
@@ -13,7 +13,7 @@ interface DashboardStore {
   sidebarOpen: boolean;
   
   // Widget Actions
-  addWidget: (widget: Omit<Widget, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  addWidget: (widget: WidgetInput) => void;
   removeWidget: (id: string) => void;
   updateWidget: (id: string, updates: Partial<Widget>) => void;
   moveWidget: (id: string, position: WidgetPosition) => void;
