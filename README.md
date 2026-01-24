@@ -46,31 +46,3 @@ A customizable real-time finance dashboard that allows users to monitor financia
 * Netlify (Deployment)
 * Git & GitHub (Version Control)
 
-
-## 🧠 Design & Architecture
-
-### Key Design Principles
-
-* Component-based architecture using React
-* Separation of concerns (UI, logic, services)
-* Reusability and scalability of widgets
-* Clean and readable code structure
-
-### Performance Considerations
-
-* Optimized component rendering
-* Efficient state management
-* Modular widget loading
-
----
-
-## 📊 Evaluation Criteria Mapping
-
-This project addresses the evaluation criteria as follows:
-
-* ✅ **Correctness & Completeness:** Implemented a working customizable dashboard.
-* ✅ **Code Quality:** Modular, readable, and maintainable code.
-* ✅ **Efficiency:** Optimized component rendering and data handling.
-* ✅ **Documentation:** Clear README and structured project setup.
-
----
