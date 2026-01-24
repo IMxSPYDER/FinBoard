@@ -39,7 +39,7 @@ A customizable real-time finance dashboard that allows users to monitor financia
 * React.js
 * JavaScript (ES6+)
 * Tailwind CSS / CSS
-* Chart Library (e.g., Chart.js / Recharts)
+* Chart Library like Chart.js, Rechart, etc.
 
 ### Tools & Platforms
 
